@@ -13,7 +13,7 @@
     use App\Http\Controllers\memberController;
     use App\Http\Controllers\ApplicationController;
     use App\Http\Controllers\DashboardController;
-
+use Illuminate\Support\Facades\Http;
 
     /*
     |--------------------------------------------------------------------------
@@ -32,6 +32,14 @@
             'phpVersion' => PHP_VERSION,
         ]);
     });
+
+
+
+    // routes/web.php
+Route::get('/proxy-geojson', function () {
+    $response = Http::get('https://echarts.apache.org/examples/data/asset/geo/USA.json');
+    return $response->json();
+});
 
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');

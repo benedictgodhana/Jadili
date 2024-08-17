@@ -1,4 +1,5 @@
 <?php
+
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
@@ -12,32 +13,34 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
+        Role::create(['name' => 'admin']);
+        Role::create(['name' => 'regional_manager']);
+        Role::create(['name' => 'content_creator']);
+        Role::create(['name' => 'data_analyst']);
+        Role::create(['name' => 'support_staff']);
+        Role::create(['name' => 'local_coordinator']);
+        Role::create(['name' => 'moderator']);
+        Role::create(['name' => 'viewer']);
+
         // Create permissions
-        Permission::create(['name' => 'apply for opportunities']);
-        Permission::create(['name' => 'view own applications']);
-        Permission::create(['name' => 'manage opportunities']);
+        Permission::create(['name' => 'view reports']);
         Permission::create(['name' => 'manage users']);
-        Permission::create(['name' => 'view all applications']);
-        Permission::create(['name' => 'approve applications']);
-        Permission::create(['name' => 'reject applications']);
-        Permission::create(['name' => 'send notifications']);
+        Permission::create(['name' => 'edit content']);
+        Permission::create(['name' => 'analyze data']);
+        Permission::create(['name' => 'provide support']);
+
 
         // Create roles and assign created permissions
 
         // Student role
-        $studentRole = Role::create(['name' => 'student']);
-        $studentRole->givePermissionTo(['apply for opportunities', 'view own applications']);
-
+       
         // Admin role
-        $adminRole = Role::create(['name' => 'admin']);
-        $adminRole->givePermissionTo([
-            'manage opportunities',
-            'manage users',
-            'view all applications',
-            'approve applications',
-            'reject applications',
-            'send notifications'
-        ]);
+        $role = Role::findByName('admin');
+        $role->givePermissionTo(Permission::all());
+
+
+        $role = Role::findByName('data_analyst');
+        $role->givePermissionTo('analyze data');
 
         // Super-admin role
         $superAdminRole = Role::create(['name' => 'super-admin']);

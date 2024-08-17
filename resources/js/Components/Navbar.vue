@@ -1,67 +1,62 @@
 <template>
     <v-app-bar
-      :class="['app-bar', { 'bg-orange': !isScrolled, 'bg-green': isScrolled }]"
       app
-      elevation="0"
-      dense
+      flat
+      elevation="1"
+      class="nav-bar"
     >
-      <v-container>
-        <v-row align="center" justify="space-between">
-          <!-- Logo -->
-          <v-img
-            src="/Images/logo.png"
-            contain
-            max-width="130"
-            class="logo"
-          ></v-img>
+      <v-container class="d-flex align-center justify-space-between">
 
-          <v-col class="d-flex justify-end">
-            <template v-if="canLogin">
-              <v-btn
-                v-if="auth && auth.user"
-                :href="route('dashboard')"
-                class="btn ms-4"
-                style="text-transform: capitalize;"
-              >
-                Dashboard
-              </v-btn>
-              <template v-else>
-                <v-btn
-                  v-if="canRegister"
-                  :href="route('register')"
-                  class="btn ms-4"
-                  color="white"
-                  style="text-transform: capitalize; color:black;font-weight: 900; "
-                >
-                  <v-icon size="19">mdi-account-plus</v-icon> Register
-                </v-btn>
-                <v-btn
-                  :href="route('login')"
-                  class="btn ms-4"
-                  color="white"
-                  style="text-transform: capitalize;font-weight: 900;"
-                >
-                  <v-icon size="19">mdi-login</v-icon> Log in
-                </v-btn>
-              </template>
-            </template>
-          </v-col>
-        </v-row>
+        <!-- Logo -->
+        <v-img
+          src="/Images/WhatsApp_Image_2024-08-16_at_23.21.20-removebg-preview.png"
+          alt="Jadili Logo"
+          class="logo"
+          max-width="120"
+        />
+
+        <!-- Title -->
+        <v-btn text class="nav-title"><span style="color:green">J</span><span style="color:red">A</span><span style="color:black">D</span><span style="color:lightgreen">I</span><span style="color:black">L</span> <span style="color:red">I</span> USSD</v-btn>
+
+        <!-- Navigation Links -->
+        <div class="nav-links">
+          <v-btn text class="nav-link">
+            <v-icon left>mdi-chart-line</v-icon> Dashboard
+          </v-btn>
+          <v-btn text class="nav-link">
+            <v-icon left>mdi-format-list-bulleted</v-icon> View Responses
+          </v-btn>
+          <v-btn text class="nav-link">
+            <v-icon left>mdi-settings</v-icon> Settings
+          </v-btn>
+          <v-btn text class="nav-link">
+            <v-icon left>mdi-help-circle</v-icon> Help
+          </v-btn>
+        </div>
+
+        <!-- Auth Links -->
+        <div class="nav-links">
+          <v-btn :href="route('register')" class="nav-link mr-4" elevation="0">
+            Register <v-icon>mdi-account-plus</v-icon>
+          </v-btn>
+          <v-btn :href="route('login')" class="nav-link" elevation="0">
+            Log In <v-icon>mdi-login</v-icon>
+          </v-btn>
+        </div>
       </v-container>
     </v-app-bar>
   </template>
 
   <script setup>
+  import { VImg, VIcon } from 'vuetify/components';
   import { ref, onMounted, onUnmounted } from 'vue';
-  import { usePage } from '@inertiajs/vue3';
 
-  const { props } = usePage();
-  const { canLogin, canRegister, auth } = props; // Ensure 'auth' is destructured from props
+  const route = (name) => `/${name}`; // Dummy route function for demonstration
 
   const isScrolled = ref(false);
 
   const handleScroll = () => {
-    isScrolled.value = window.scrollY > 0;
+    isScrolled.value = window.scrollY > 50;
   };
 
   onMounted(() => {
@@ -74,34 +69,51 @@
   </script>
 
   <style scoped>
-  .app-bar {
+  .nav-bar {
+    height: 80px;
     transition: background-color 0.3s ease;
+    padding: 10px;
+    background-color:white;
   }
 
-  .bg-transparent {
-    background-color: transparent !important;
+  .logo {
+    max-width: 120px;
+    height: auto;
   }
 
-  .bg-green {
-    background-color: green !important;
+  .nav-title {
+    font-weight: bold;
+    color: white;
+    text-transform: capitalize;
+    font-size: 20px;
   }
 
-  .btn {
-    padding: 0.5rem 1rem;
-    border: 1px solid transparent;
-    border-radius: 0.375rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: background-color 0.3s ease, color 0.3s ease;
+  .nav-links .nav-link {
+    color:black;
+    text-decoration: none;
+    font-weight: 500;
+    text-transform: capitalize;
+    margin-right: 20px;
+  }
+
+  .nav-links .nav-link:hover {
+    color: blue;
+  }
+
+  .auth-links .nav-link {
+    color: white;
+    text-transform: capitalize;
+    background-color: blue;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-radius: 4px;
+  }
+
+  .auth-links .nav-link:hover {
+    background-color: darkblue;
   }
 
   .ms-4 {
     margin-left: 1rem;
-  }
-
-  .logo {
-    max-width: 150px;
-    height: auto;
   }
   </style>

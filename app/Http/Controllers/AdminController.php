@@ -9,27 +9,34 @@ use App\Models\Feedback;
 use App\Models\FeedbackCategory;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\UssdResponse;
+use App\Models\EducationalMaterial;
 use App\Models\Notification;
 use App\Models\Application;
+use App\Models\PublicEngagement;
+
 class AdminController extends Controller
 {
     public function index()
-{
-    $totalUsers = User::count();
+    {
+        // Fetch counts for users, USSD responses, and educational materials
+        $totalUsers = User::count();
+        $totalUssdResponses = UssdResponse::count();
+        $totalEducationalMaterials = EducationalMaterial::count();
 
-    // Count applications for today, this week, and this month
-    $applicationsToday = Application::whereDate('created_at', Carbon::today())->count();
-    $applicationsThisWeek = Application::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->count();
-    $applicationsThisMonth = Application::whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->count();
+        $usersSubmittedToday = UssdResponse::whereDate('created_at', today())->distinct('user_id')->count('user_id');
+        // Count applications for today, this week, and this month
+        $engagementsToday = PublicEngagement::whereDate('created_at', today())->count();
+        // Return data using Inertia
+        return Inertia::render('Admin/AdminIndex', [
+            'totalUsers' => $totalUsers,
+            'totalUssdResponses' => $totalUssdResponses,
+            'totalEducationalMaterials' => $totalEducationalMaterials,
+            'usersSubmittedToday' => $usersSubmittedToday,
+            'engagementsToday' => $engagementsToday,
 
-    // Return data using Inertia
-    return Inertia::render('Admin/AdminIndex', [
-        'totalUsers' => $totalUsers,
-        'applicationsToday' => $applicationsToday,
-        'applicationsThisWeek' => $applicationsThisWeek,
-        'applicationsThisMonth' => $applicationsThisMonth,
-    ]);
-}
+        ]);
+    }
     public function users(): Response
     {
         $user = auth()->user(); // Assuming you're using Laravel's authentication

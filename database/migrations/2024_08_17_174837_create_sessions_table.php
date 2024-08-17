@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('sessions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('phone_number')->unique();
-            $table->string('email')->nullable()->unique();
-            $table->string('password')->nullable();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('session_id');
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('sessions');
     }
 };

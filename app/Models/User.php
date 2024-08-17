@@ -20,8 +20,7 @@ class User extends Authenticatable
         'name',
         'email',
         'username',           // Added
-        'staff_number',       // Added
-        'admission_number',   // Added
+        'phone_number',       // Added
         'password',
     ];
 
@@ -48,16 +47,7 @@ class User extends Authenticatable
     /**
      * Get the user profile associated with the user.
      */
-    public function profile()
-    {
-        return $this->hasOne(UserProfile::class);
-    }
-
-    public function contributions()
-    {
-        return $this->hasMany(Contribution::class);
-    }
-
+   
     /**
      * Method to find a user by various credentials.
      */
