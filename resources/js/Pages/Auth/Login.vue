@@ -113,17 +113,14 @@ const submit = () => {
         onFinish: (event) => {
             const response = event.detail.jetstream.response;
             if (response && response.status === 'success') {
-                // Save token in local storage
                 localStorage.setItem('token', response.token);
 
-                // Redirect to appropriate page based on user role
                 if (response.role === 'admin') {
                     Inertia.visit(route('admin.dashboard'));
                 } else {
                     Inertia.visit(route('dashboard'));
                 }
             } else {
-                // Handle unsuccessful login
                 console.error('Login unsuccessful');
             }
         },
@@ -138,7 +135,7 @@ const submit = () => {
 
 .login-card {
     border-radius: 5px;
-    background-color: rgba(255, 255, 255, 0.9); /* Optional: Add a slight transparency to the card */
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
 .login-button {

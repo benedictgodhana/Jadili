@@ -2,28 +2,43 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use App\Models\Application;
-use App\Models\UserProfile;
+use App\Models\UssdResponse;
+use App\Models\UssdFlow;
 
 class DashboardController extends Controller
 {
-    public function index()
+
+    public function index(Request $request)
     {
-        // Fetch applications for the authenticated user with additional details
-        $applications = Application::with(['applicationType', 'location', 'institution', 'activity'])
-            ->where('user_id', Auth::id())
+        $searchQuery = $request->input('search', '');
+
+        $ussdFlows = UssdFlow::with(['ussdFlowSteps.ussdResponses'])
+            ->where('flow_name', 'like', "%{$searchQuery}%")
+            ->orWhereHas('ussdFlowSteps', function ($query) use ($searchQuery) {
+                $query->where('message', 'like', "%{$searchQuery}%")
+                    ->orWhereHas('ussdResponses', function ($query) use ($searchQuery) {
+                        $query->where('response', 'like', "%{$searchQuery}%");
+                    });
+            })
             ->get();
 
-        // Fetch the user profile for the authenticated user
-        $userProfile = UserProfile::where('user_id', Auth::id())->first();
-        
+        $combinedData = $ussdFlows->map(function ($flow) {
+            return $flow->ussdFlowSteps->map(function ($step) use ($flow) {
+                return $step->ussdResponses->map(function ($response) use ($flow, $step) {
+                    return [
+                        'flow_name' => $flow->flow_name,
+                        'step_name' => $step->step_name ?? 'N/A',
+                        'response'  => $response->response,
+                    ];
+                });
+            })->flatten(1);
+        })->flatten(1);
 
-        // Pass the applications and user profile data to the Inertia view
-        return Inertia::render('Dashboard', [
-            'applications' => $applications,
-            'userProfile' => $userProfile,
+        return Inertia::render('Response', [
+            'combinedData' => $combinedData,
         ]);
     }
+
+
 }

@@ -9,30 +9,10 @@ class UssdResponse extends Model
 {
     use HasFactory;
 
-    protected $table = 'ussd_responses';
+    protected $fillable = ['session_id', 'response'];
 
-    protected $primaryKey = 'id';
-
-    public $timestamps = true;
-
-    protected $fillable = [
-        'user_id',
-        'ussd_flow_step_id',
-        'response',
-    ];
-
-    protected $dates = [
-        'created_at',
-        'updated_at',
-    ];
-
-    public function user()
+    public function session()
     {
-        return $this->belongsTo(User::class);
-    }
-
-    public function ussdFlowStep()
-    {
-        return $this->belongsTo(UssdFlowStep::class, 'ussd_flow_step_id');
+        return $this->belongsTo(Session::class);
     }
 }

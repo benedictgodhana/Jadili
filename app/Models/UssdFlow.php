@@ -31,8 +31,10 @@ class UssdFlow extends Model
     ];
 
     // Define relationships if applicable
-    public function steps()
+    
+
+    public function ussdFlowSteps()
     {
-        return $this->hasMany(UssdFlowStep::class, 'flow_id');
+        return $this->hasMany(UssdFlowStep::class, 'ussd_flow_id');
     }
 }

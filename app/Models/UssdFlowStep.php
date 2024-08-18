@@ -30,4 +30,11 @@ class UssdFlowStep extends Model
     {
         return $this->belongsTo(UssdFlow::class, 'ussd_flow_id');
     }
+
+    public function ussdResponses()
+    {
+        return $this->hasMany(UssdResponse::class, 'ussd_flow_step_id');
+    }
+
+
 }

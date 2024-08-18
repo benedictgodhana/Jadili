@@ -20,10 +20,10 @@
 
         <!-- Navigation Links -->
         <div class="nav-links">
-          <v-btn text class="nav-link">
+          <v-btn text class="nav-link" href="/">
             <v-icon left>mdi-chart-line</v-icon> Dashboard
           </v-btn>
-          <v-btn text class="nav-link">
+          <v-btn text class="nav-link" :href="route('response')">
             <v-icon left>mdi-format-list-bulleted</v-icon> View Responses
           </v-btn>
           <v-btn text class="nav-link">

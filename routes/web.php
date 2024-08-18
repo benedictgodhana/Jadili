@@ -13,6 +13,8 @@
     use App\Http\Controllers\memberController;
     use App\Http\Controllers\ApplicationController;
     use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\UssdController;
+use App\Models\UssdResponse;
 use Illuminate\Support\Facades\Http;
 
     /*
@@ -24,14 +26,20 @@ use Illuminate\Support\Facades\Http;
     |
     */
 
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
+
+Route::get('/', function () {
+    // Fetch the total number of responses
+    $totalResponses = UssdResponse::count();
+    // Fetch the total number of users who have made a response
+
+    return Inertia::render('Welcome', [
+        'canLogin' => Route::has('login'),
+        'canRegister' => Route::has('register'),
+        'laravelVersion' => Application::VERSION,
+        'phpVersion' => PHP_VERSION,
+        'totalResponses' => $totalResponses,
+    ]);
+});
 
 
 
@@ -64,7 +72,6 @@ Route::get('/proxy-geojson', function () {
         Route::get('/settings', [memberController::class, 'settings'])->name('settings');
 
         Route::get('/institutions', [memberController::class, 'getFilteredInstitutions']);
-        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::post('/applications', [ApplicationController::class, 'submit'])->name('applications.store');
 
         // In routes/api.php
@@ -142,6 +149,12 @@ Route::get('/proxy-geojson', function () {
     Route::post('/register', [RegisteredUserController::class, 'store'])->name('register.store');
 
     Route::get('/give_feedback', [FeedbackController::class, 'GivefeedbackPage'])->name('feedback');
+
+    Route::get('/response', [DashboardController::class, 'index'])->name('response.index');
+
+    Route::post('/ussd', [UssdController::class, 'handleUssd']);
+
+    Route::post('/ussd/callback', [UssdController::class, 'handleUssd']);
 
 
     require __DIR__ . '/auth.php';
