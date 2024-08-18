@@ -47,6 +47,8 @@ Route::get('/proxy-geojson', function () {
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::get('/feedback/print', [FeedbackController::class, 'print'])->name('feedback.print');
         Route::get('/feedback/export', [FeedbackController::class, 'export'])->name('feedback.export');
+        Route::post('/ussd', 'UssdController@ussdRequestHandler');
+
 
         // Check if the user is an admin
 
